@@ -1,0 +1,22 @@
+[
+  {
+    "id": 0,
+    "username": "tsairyan",
+    "firstName": "Ryan",
+    "lastName": "Tsai",
+    "password": "12345",
+    "accountType": "Casual",
+    "likes": [],
+    "following": []
+  },
+  {
+    "id": 1,
+    "username": "pro_cook",
+    "firstName": "Professional",
+    "lastName": "Cook",
+    "password": "123",
+    "accountType": "Professional",
+    "likes": [],
+    "following": []
+  }
+]
