@@ -5,9 +5,7 @@ const recipeSchema = new mongoose.Schema(
     description: String,
     url: String,
     liked_user: [String],
-    comments: [String],
-    user_who_commented: [String],
-    likes: number,
+    likes: Number,
     id: Number,
   },
   { collection: "users" }

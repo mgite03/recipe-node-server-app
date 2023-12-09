@@ -3,12 +3,12 @@ function RecipeRoutes(app) {
     
     const getRecipeList = async (req, res) => {
         const size = req.params.size;
-        const tag = req.params.tag;
-        const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes';
+        const tags = req.params.tags;
+        const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=${size}&tags=${tags}`;
         const options = {
             method: 'GET',
             headers: {
-                'X-RapidAPI-Key': 'bdca2962e7msh49217335710b68fp1052c1jsn504f42d54e5e',
+                'X-RapidAPI-Key': process.env.APIKEY,
                 'X-RapidAPI-Host': 'tasty.p.rapidapi.com'
             }
         };
