@@ -20,7 +20,7 @@ function UserRoutes(app) {
     if (user) {
       const currentUser = user;
       console.log(currentUser);
-      req.session['currentUser'] = currentUser;
+      req.session["currentUser"] = currentUser;
       res.json(currentUser);
       return;
     } else {
@@ -29,15 +29,15 @@ function UserRoutes(app) {
   };
 
   const account = async (req, res) => {
-    const currentUser = req.session['currentUser'];
+    const currentUser = req.session["currentUser"];
     res.json(currentUser);
   };
 
   const updateUser = async (req, res) => {
     const { username } = req.params;
     const status = await dao.updateUser(username, req.body);
-    const currentUser = await dao.findUserByUsername(username);
-    req.session["currentUser"] = currentUser;
+    // const currentUser = await dao.findUserByUsername(username);
+    // req.session["currentUser"] = currentUser;
     res.json(status);
   };
 
@@ -51,7 +51,7 @@ function UserRoutes(app) {
       const new_user = { ...req.body, id: new_id.id + 1 };
       console.log(new_user);
       const currentUser = await dao.createUser(new_user);
-      req.session['currentUser'] = currentUser;
+      req.session["currentUser"] = currentUser;
       res.json(currentUser);
     }
   };
