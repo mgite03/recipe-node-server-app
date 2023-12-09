@@ -17,14 +17,20 @@ function UserRoutes(app) {
   const signin = async (req, res) => {
     const { username, password } = req.body;
     currentUser = await dao.findUserByCredentials(username, password);
-    req.session['currentUser'] = currentUser;
-    res.json(currentUser);
-    console.log(currentUser);
+    if (user) {
+      const currentUser = user;
+      console.log(currentUser);
+      req.session['currentUser'] = currentUser;
+      res.json(currentUser);
+      return;
+    } else {
+      res.sendStatus(403);
+    }
   };
 
   const account = async (req, res) => {
-    res.json(req.session['currentUser']);
-    // res.json(currentUser);
+    const currentUser = req.session['currentUser'];
+    res.json(currentUser);
   };
 
   const updateUser = async (req, res) => {
@@ -49,7 +55,8 @@ function UserRoutes(app) {
       res.json(currentUser);
     }
   };
-  const signout = (req, res) => {
+  
+  const signout = async (req, res) => {
     req.session.destroy();
     // currentUser = null;
     res.json(200);
