@@ -6,7 +6,7 @@ function RecipeRoutes(app) {
         // const size = req.params.size;
         // const tags = req.params.tags;
         // const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=${size}&tags=${tags}`;
-        const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20';
+        const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=2';
         const options = {
             method: 'GET',
             headers: {
