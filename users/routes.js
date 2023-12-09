@@ -10,13 +10,13 @@ function UserRoutes(app) {
 
   const findUser = async (req, res) => {
     const username = req.params.username;
-    currentUser = await dao.findUserByUsername(username);
+    const currentUser = await dao.findUserByUsername(username);
     res.json(currentUser);
   };
 
   const signin = async (req, res) => {
     const { username, password } = req.body;
-    currentUser = await dao.findUserByCredentials(username, password);
+    const user = await dao.findUserByCredentials(username, password);
     if (user) {
       const currentUser = user;
       console.log(currentUser);
@@ -55,7 +55,7 @@ function UserRoutes(app) {
       res.json(currentUser);
     }
   };
-  
+
   const signout = async (req, res) => {
     req.session.destroy();
     // currentUser = null;
