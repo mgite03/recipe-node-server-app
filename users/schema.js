@@ -12,6 +12,8 @@ const userSchema = new mongoose.Schema(
       default: "Casual",
     },
     id: Number,
+    likes: [Number],
+    comments: [Number],
   },
   { collection: "users" }
 );
