@@ -1,1 +1,1 @@
-import model from "./recipesModel";
+import model from "./recipesModel.js";
