@@ -17,12 +17,21 @@ function RecipeRoutes(app) {
     // Hand in tags or not to get the list of recipes
     // Each recipe json has it's own id, thumbnail and maybe a video so check video_url
     const getRecipeList = async (req, res) => {
-        const tags = req.params.tags;
-        console.log(tags)
-        let url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=${recipe_list_size}&tags=${tags}`;
-        if (tags == undefined) {
-            url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=${recipe_list_size}`
+        const tags = req.params.tags; // &tags=<whatever tag you want>
+        const ingredients = req.params.ingredients; // &q=<whatever ingredients>
+        const detailsToRequest = req.body;
+        let url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=${recipe_list_size}`
+        if (tags !=  undefined) {
+            console.log(tags)
+            url += `&tags=${tags}`;
         } 
+        if (ingredients != undefined) {
+            console.log(ingredients)
+            url += `&q=${ingredients}`;
+        }
+        if (detailsToRequest != undefined) {
+            url += detailsToRequest
+        }
         try {
             // Reponse is a 2d array with count (int) and the results (array with all the info about the recipe)
             const response = await fetch(url, options);
@@ -67,8 +76,9 @@ function RecipeRoutes(app) {
         res.json(recipes)
     }
 
+    app.get('/api/recipes/:tags/:ingredients', getRecipeList);
     app.get('/api/recipes/:tags', getRecipeList);
-    app.get('/api/recipes', getRecipeList);
+    app.get('/api/recipes', getRecipeList); // Try to use this 
     app.get('/api/recipes/more-info/:recipeId', getRecipeMoreInfo)
     app.post('/api/recipes', saveRecipe)
     app.get('/api/recipes/user/:userId', getSavedUserRecipes)
