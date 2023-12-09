@@ -1,4 +1,5 @@
 import * as dao from "./dao.js";
+import "dotenv/config";
 function RecipeRoutes(app) {
     
     const getRecipeList = async (req, res) => {
@@ -17,5 +18,5 @@ function RecipeRoutes(app) {
         res.json(recipes);
     };
 
-    app.get(url, getRecipeList);
+    app.get('/api/recipes', getRecipeList);
 } export default RecipeRoutes;
