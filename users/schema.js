@@ -13,8 +13,8 @@ const userSchema = new mongoose.Schema(
     },
     id: Number,
     likes: [Number],
-    follows: [Number],
-    followers: [Number],
+    follows: [String],
+    followers: [String],
   },
   { collection: "users" }
 );
