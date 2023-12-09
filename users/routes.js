@@ -37,7 +37,7 @@ function UserRoutes(app) {
     const { username } = req.params;
     const status = await dao.updateUser(username, req.body);
     const currentUser = await dao.findUserByUsername(username);
-    // req.session["currentUser"] = currentUser;
+    req.session["currentUser"] = currentUser;
     res.json(status);
   };
 
@@ -50,7 +50,7 @@ function UserRoutes(app) {
     } else {
       const new_user = { ...req.body, id: new_id.id + 1 };
       console.log(new_user);
-      currentUser = await dao.createUser(new_user);
+      const currentUser = await dao.createUser(new_user);
       req.session['currentUser'] = currentUser;
       res.json(currentUser);
     }
