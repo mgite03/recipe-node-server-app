@@ -5,6 +5,8 @@ import RecipeRoutes from "./recipes/recipesRoutes.js";
 import CommentsRoutes from "./comments/commentsRoutes.js";
 import express from "express";
 import mongoose from "mongoose";
+import session from "express-session";
+
 try {
   mongoose.connect("mongodb://127.0.0.1:27017/recipe");
   console.log("mongoose connected");
@@ -12,7 +14,21 @@ try {
   console.log("not connected");
 }
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:3000",
+  })
+ );
+ 
+
+const sessionOptions = {
+  secret: "any string",
+  resave: false,
+  saveUninitialized: false,
+};
+app.use(session(sessionOptions));
+
 app.use(express.json());
 Users(app);
 RecipeRoutes(app);

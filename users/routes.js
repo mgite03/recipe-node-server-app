@@ -1,31 +1,43 @@
 import * as dao from "./dao.js";
-let currentUser = null;
+// let currentUser = null;
 function UserRoutes(app) {
   const createUser = async (req, res) => {};
   const deleteUser = async (req, res) => {};
-  const findAllUsers = async (req, res) => {};
+  const findAllUsers = async (req, res) => {
+    const users = await dao.findAllUsers();
+    res.json(users);
+  };
 
   const findUser = async (req, res) => {
     const username = req.params.username;
-    currentUser = await dao.findUserByUsername(username);
+    const currentUser = await dao.findUserByUsername(username);
     res.json(currentUser);
   };
 
   const signin = async (req, res) => {
     const { username, password } = req.body;
-    currentUser = await dao.findUserByCredentials(username, password);
-    res.json(currentUser);
-    console.log(currentUser);
+    const user = await dao.findUserByCredentials(username, password);
+    if (user) {
+      const currentUser = user;
+      console.log(currentUser);
+      req.session["currentUser"] = currentUser;
+      res.json(currentUser);
+      return;
+    } else {
+      res.sendStatus(403);
+    }
   };
 
   const account = async (req, res) => {
+    const currentUser = req.session["currentUser"];
     res.json(currentUser);
   };
+
   const updateUser = async (req, res) => {
     const { username } = req.params;
     const status = await dao.updateUser(username, req.body);
     const currentUser = await dao.findUserByUsername(username);
-    // req.session["currentUser"] = currentUser;
+    req.session["currentUser"] = currentUser;
     res.json(status);
   };
 
@@ -38,12 +50,15 @@ function UserRoutes(app) {
     } else {
       const new_user = { ...req.body, id: new_id.id + 1 };
       console.log(new_user);
-      currentUser = await dao.createUser(new_user);
+      const currentUser = await dao.createUser(new_user);
+      req.session["currentUser"] = currentUser;
       res.json(currentUser);
     }
   };
-  const signout = (req, res) => {
-    currentUser = null;
+
+  const signout = async (req, res) => {
+    req.session.destroy();
+    // currentUser = null;
     res.json(200);
   };
 
