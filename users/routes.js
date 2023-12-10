@@ -1,8 +1,8 @@
 import * as dao from "./dao.js";
 // let currentUser = null;
 function UserRoutes(app) {
-  const createUser = async (req, res) => {};
-  const deleteUser = async (req, res) => {};
+  const createUser = async (req, res) => { };
+  const deleteUser = async (req, res) => { };
   const findAllUsers = async (req, res) => {
     const users = await dao.findAllUsers();
     res.json(users);
@@ -62,10 +62,27 @@ function UserRoutes(app) {
     res.json(200);
   };
 
+  const addLikedRecipe = async (req, res) => {
+    const recipeId = req.params.recipeId
+    let currentUser =  req.body // Gets Current User
+    console.log(currentUser)
+    console.log(recipeId)
+    if (currentUser["likes"] == undefined) {
+      currentUser = { ...currentUser, likes: [recipeId] }
+    } else {
+      currentUser = { ...currentUser, likes: [...currentUser["likes"], recipeId] } // Adds this recipeId to likes
+    }
+    console.log(currentUser)
+    req.session["currentUser"] = currentUser;
+    const status = await dao.updateUser(currentUser.username, currentUser) // Updates the current user in mongoDB
+    res.json(status)
+  }
+
   app.get("/api/users/:username", findUser);
   app.post("/api/users/register", signup);
   app.post("/api/users", createUser);
   app.get("/api/users", findAllUsers);
+  app.put("/api/users/like/:recipeId", addLikedRecipe)
 
   app.put("/api/users/:username", updateUser);
   app.delete("/api/users/:userId", deleteUser);
