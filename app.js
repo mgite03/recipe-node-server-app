@@ -7,8 +7,9 @@ import express from "express";
 import mongoose from "mongoose";
 import session from "express-session";
 
+const CONNECTION_STRING = process.env.DB_CONNECTION_STRING || "mongodb://127.0.0.1:27017/recipe";
+
 try {
-  const CONNECTION_STRING = process.env.DB_CONNECTION_STRING || 'mongodb://127.0.0.1:27017/kanbas'
   mongoose.connect(CONNECTION_STRING);
   console.log("mongoose connected");
 } catch (err) {
@@ -20,7 +21,9 @@ app.use(
     credentials: true,
     origin: process.env.FRONT_END_URL,
   })
-);
+ );
+
+
 const sessionOptions = {
   secret: "any string",
   resave: false,
