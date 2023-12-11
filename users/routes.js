@@ -18,7 +18,6 @@ function UserRoutes(app) {
     const { username, password } = req.body;
     const user = await dao.findUserByCredentials(username, password);
     if (user) {
-      const currentUser = user;
       console.log(currentUser);
       req.session["currentUser"] = currentUser;
       res.json(currentUser);
@@ -49,7 +48,6 @@ function UserRoutes(app) {
       res.status(400).json({ message: "Username already taken" });
     } else {
       const new_user = { ...req.body, id: new_id.id + 1 };
-      console.log(new_user);
       const currentUser = await dao.createUser(new_user);
       req.session["currentUser"] = currentUser;
       res.json(currentUser);
@@ -64,15 +62,7 @@ function UserRoutes(app) {
 
   const addLikedRecipe = async (req, res) => {
     const recipeId = req.params.recipeId
-    let currentUser =  req.body // Gets Current User
-    console.log(currentUser)
-    console.log(recipeId)
-    if (currentUser["likes"] == undefined) {
-      currentUser = { ...currentUser, likes: [recipeId] }
-    } else {
-      currentUser = { ...currentUser, likes: [...currentUser["likes"], recipeId] } // Adds this recipeId to likes
-    }
-    console.log(currentUser)
+    const currentUser = { ...req.body, likes: [...req.body["likes"], recipeId] } // Adds this recipeId to likes
     req.session["currentUser"] = currentUser;
     const status = await dao.updateUser(currentUser.username, currentUser) // Updates the current user in mongoDB
     res.json(status)

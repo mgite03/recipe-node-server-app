@@ -6,10 +6,10 @@ const recipeSchema = new mongoose.Schema(
     video_url: String,
     img_url: String,
     more_info_url: String, // Have to call recipes/get-more-info to fill this.
-    liked_user: [String],
+    liked_user: [Number],
     likes: Number,
     id: Number,
   },
-  { collection: "users" }
+  { collection: "recipes" }
 );
 export default recipeSchema;

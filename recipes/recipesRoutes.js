@@ -73,6 +73,7 @@ function RecipeRoutes(app) {
     const getSavedUserRecipes = async (req, res) => {
         const { userId } = req.params
         const recipes = await dao.findUserRecipes(userId)
+        console.log(recipes)
         res.json(recipes)
     }
 
