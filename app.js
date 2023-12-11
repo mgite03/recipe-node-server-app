@@ -7,8 +7,10 @@ import express from "express";
 import mongoose from "mongoose";
 import session from "express-session";
 
+const CONNECTION_STRING = process.env.DB_CONNECTION_STRING || "mongodb://127.0.0.1:27017/recipe";
+
 try {
-  mongoose.connect("mongodb://127.0.0.1:27017/recipe");
+  mongoose.connect(CONNECTION_STRING);
   console.log("mongoose connected");
 } catch (err) {
   console.log("not connected");
@@ -20,13 +22,20 @@ app.use(
     origin: process.env.FRONT_END_URL,
   })
  );
- 
+
 
 const sessionOptions = {
   secret: "any string",
   resave: false,
   saveUninitialized: false,
 };
+if (process.env.NODE_ENV !== "development") {
+  sessionOptions.proxy = true;
+  sessionOptions.cookie = {
+    sameSite: "none",
+    secure: true,
+  };
+}
 app.use(session(sessionOptions));
 
 app.use(express.json());
