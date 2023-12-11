@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 import session from "express-session";
 
 const CONNECTION_STRING = process.env.DB_CONNECTION_STRING || "mongodb://127.0.0.1:27017/recipe";
+const app = express();
 
 try {
   mongoose.connect(CONNECTION_STRING);
@@ -15,14 +16,12 @@ try {
 } catch (err) {
   console.log("not connected");
 }
-const app = express();
 app.use(
   cors({
     credentials: true,
     origin: process.env.FRONT_END_URL,
   })
  );
-
 
 const sessionOptions = {
   secret: "any string",
@@ -37,7 +36,6 @@ if (process.env.NODE_ENV !== "development") {
   };
 }
 app.use(session(sessionOptions));
-
 app.use(express.json());
 Users(app);
 RecipeRoutes(app);
