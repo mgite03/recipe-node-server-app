@@ -75,11 +75,31 @@ function UserRoutes(app) {
     const status = await dao.updateUser(currentUser.username, currentUser); // Updates the current user in mongoDB
     res.json(status);
   };
+  const unLikedRecipe = async (req, res) => {
+    const recipeId = req.params.recipeId;
+    let likeList = req.body["likes"];
+    let newLikeList = [];
+    // Removes the any recipeId that is the same as the given one to "unlike" it
+    for (const repId in likeList) {
+      if (repId != recipeId) {
+        newLikeList.push(repId)
+      }
+    }
+    const currentUser = {
+      ...req.body,
+      likes: newLikeList,
+    }; // Adds this recipeId to likes
+    req.session["currentUser"] = currentUser;
+    const status = await dao.updateUser(currentUser.username, currentUser); // Updates the current user in mongoDB
+    res.json(status);
+  };
+
   app.get("/api/users/:username", findUser);
   app.post("/api/users/register", signup);
   app.post("/api/users", createUser);
   app.get("/api/users", findAllUsers);
   app.put("/api/users/like/:recipeId", addLikedRecipe);
+  app.put("/api/users/unlike/:recipeId", unLikedRecipe);
 
   app.put("/api/users/:username", updateUser);
   app.delete("/api/users/:username", deleteUser);
