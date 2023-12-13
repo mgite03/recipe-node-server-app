@@ -8,8 +8,8 @@ const userSchema = new mongoose.Schema(
     accountType: {
       type: String,
       required: true,
-      enum: ["Casual", "Professional"],
-      default: "Casual",
+      enum: ["User", "Admin"],
+      default: "User",
     },
     id: Number,
     likes: [Number],
