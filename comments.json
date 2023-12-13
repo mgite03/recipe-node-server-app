@@ -1,0 +1,18 @@
+[
+    {
+        "username": "user",
+        "createTime": "Tue, 19 Aug 1975 23:15:30 GMT",
+        "description": "This is a good recipe",
+        "recipeId": 8138,
+        "likes": 1,
+        "id": 1
+    },
+    {
+        "username": "user",
+        "createTime": "Sunday, 13 Aug 2023 12:15:30 GMT",
+        "description": "This is a okay recipe",
+        "recipeId": 1353,
+        "likes": 1,
+        "id": 2
+    }
+]
