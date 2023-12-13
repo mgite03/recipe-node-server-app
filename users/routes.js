@@ -1,8 +1,7 @@
 import * as dao from "./dao.js";
 // let currentUser = null;
 function UserRoutes(app) {
-  const createUser = async (req, res) => { };
-  const deleteUser = async (req, res) => { };
+  const createUser = async (req, res) => {};
   const findAllUsers = async (req, res) => {
     const users = await dao.findAllUsers();
     res.json(users);
@@ -18,6 +17,7 @@ function UserRoutes(app) {
     const { username, password } = req.body;
     const user = await dao.findUserByCredentials(username, password);
     if (user) {
+      const currentUser = user;
       console.log(currentUser);
       req.session["currentUser"] = currentUser;
       res.json(currentUser);
@@ -48,10 +48,16 @@ function UserRoutes(app) {
       res.status(400).json({ message: "Username already taken" });
     } else {
       const new_user = { ...req.body, id: new_id.id + 1 };
+      console.log(new_user);
       const currentUser = await dao.createUser(new_user);
       req.session["currentUser"] = currentUser;
       res.json(currentUser);
     }
+  };
+
+  const deleteUser = async (req, res) => {
+    const status = await dao.deleteUser(req.params.username);
+    res.json(status);
   };
 
   const signout = async (req, res) => {
@@ -59,23 +65,24 @@ function UserRoutes(app) {
     // currentUser = null;
     res.json(200);
   };
-
   const addLikedRecipe = async (req, res) => {
-    const recipeId = req.params.recipeId
-    const currentUser = { ...req.body, likes: [...req.body["likes"], recipeId] } // Adds this recipeId to likes
+    const recipeId = req.params.recipeId;
+    const currentUser = {
+      ...req.body,
+      likes: [...req.body["likes"], recipeId],
+    }; // Adds this recipeId to likes
     req.session["currentUser"] = currentUser;
-    const status = await dao.updateUser(currentUser.username, currentUser) // Updates the current user in mongoDB
-    res.json(status)
-  }
-
+    const status = await dao.updateUser(currentUser.username, currentUser); // Updates the current user in mongoDB
+    res.json(status);
+  };
   app.get("/api/users/:username", findUser);
   app.post("/api/users/register", signup);
   app.post("/api/users", createUser);
   app.get("/api/users", findAllUsers);
-  app.put("/api/users/like/:recipeId", addLikedRecipe)
+  app.put("/api/users/like/:recipeId", addLikedRecipe);
 
   app.put("/api/users/:username", updateUser);
-  app.delete("/api/users/:userId", deleteUser);
+  app.delete("/api/users/:username", deleteUser);
   app.post("/api/users/login", signin);
   app.post("/api/users/signout", signout);
   app.post("/api/users/account", account);
