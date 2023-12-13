@@ -13,16 +13,17 @@ function CommentsRoutes(app) {
     };
     const deleteComment = async (req, res) => {
         const commentId = req.params.commentId;
-        const comments = await dao.deleteCommnet(commentId)
-        res.json(comments);
+        const response = await dao.deleteComment(commentId)
+        res.json(response);
     };
     const createComment = async (req, res) => {
-        const commentId = req.params.commentId;
-        const comments = await dao.deleteCommnet(commentId)
-        res.json(comments);
+        const new_id = await dao.getHighestId();
+        const comment = { ...req.body, id: new_id.id + 1 };
+        const response = await dao.createComment(comment)
+        res.json(response);
     };
 
-    app.get('/api/recipes/:recipeId/comments', getRecipeComments);
+    app.get('/api/comments/:recipeId', getRecipeComments);
     app.delete('/api/comments/:commentId', deleteComment);
     app.get('/api/comments', getComments);
     app.post('/api/comments', createComment);
