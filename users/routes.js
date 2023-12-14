@@ -1,7 +1,7 @@
 import * as dao from "./dao.js";
 // let currentUser = null;
 function UserRoutes(app) {
-  const createUser = async (req, res) => {};
+  const createUser = async (req, res) => { };
   const findAllUsers = async (req, res) => {
     const users = await dao.findAllUsers();
     res.json(users);
@@ -98,12 +98,63 @@ function UserRoutes(app) {
     res.json(status);
   };
 
+  const followUser = async (req, res) => {
+    const username = req.params.username;
+    const currentUser = {
+      ...req.body,
+      follows: [...req.body["follows"], username],
+    }; // Adds this new user to this follows list
+
+    // Gets the the following user
+    let followingUser = await dao.findUserByUsername(username)
+    console.log("Following:"+ followingUser)
+    console.log("Current UserName: " + currentUser.username)
+    followingUser["followers"] = [...followingUser["followers"], currentUser.username]
+    console.log("Following Change: " + followingUser)
+    req.session["currentUser"] = currentUser;
+    const status = await dao.updateUser(currentUser.username, currentUser); // Updates the current user in mongoDB
+    const status2 = await dao.updateUser(followingUser.username, followingUser); // Updates the following user in mongoDB
+    console.log(status2)
+    res.json(status);
+  };
+  const unfollowUser = async (req, res) => {
+    const username = req.params.username;
+    let followList = req.body["follows"];
+    let newFollowList = [];
+    // Removes the any users that are the same as the given one to "unfollow" it
+    for (const user in followList) {
+      if (user != username) {
+        newFollowList.push(user)
+      }
+    }
+    const currentUser = {
+      ...req.body,
+      follows: newFollowList,
+    }; // Adds this new follow list to this user
+    req.session["currentUser"] = currentUser;
+
+    const currUsername = currentUser.username
+    const followingUser = await dao.findUserByUsername(username)
+    let followerList = followingUser.followers;
+    // Removes the any users that are the same as the given one to "unfollow" it
+    console.log("Remove " + currUsername + " from followers:" + followerList)
+    const newFollowerList = followerList.filter((user) => user !== currUsername);
+    console.log("Shoud not have " + currUsername + " in this new list: "+ newFollowerList)
+    followingUser.followers = newFollowerList;
+    console.log("newfolloweruser: " + followingUser)
+    const status = await dao.updateUser(currUsername, currentUser); // Updates the current user in mongoDB
+    const status2 = await dao.updateUser(username, followingUser); // Updates the following user in mongoDB
+    res.json(status);
+  };
+
   app.get("/api/users/:username", findUser);
   app.post("/api/users/register", signup);
   app.post("/api/users", createUser);
   app.get("/api/users", findAllUsers);
   app.put("/api/users/like/:recipeId", addLikedRecipe);
   app.put("/api/users/unlike/:recipeId", unLikedRecipe);
+  app.put("/api/users/follow/:username", followUser);
+  app.put("/api/users/unfollow/:username", unfollowUser);
 
   app.put("/api/users/:username", updateUser);
   app.delete("/api/users/:username", deleteUser);
