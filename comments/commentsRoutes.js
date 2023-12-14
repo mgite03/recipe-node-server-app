@@ -17,8 +17,14 @@ function CommentsRoutes(app) {
         res.json(response);
     };
     const createComment = async (req, res) => {
-        const new_id = await dao.getHighestId();
-        const comment = { ...req.body, id: new_id.id + 1 };
+        const highest_id = await dao.getHighestId();
+        let new_id;
+        if (highest_id === null) {
+          new_id = 0;
+        } else {
+          new_id = highest_id.id + 1;
+        }
+        const comment = { ...req.body, id: new_id};
         const response = await dao.createComment(comment)
         res.json(response);
     };
