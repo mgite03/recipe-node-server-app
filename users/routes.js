@@ -67,13 +67,10 @@ function UserRoutes(app) {
   };
   const addLikedRecipe = async (req, res) => {
     const recipeId = req.params.recipeId;
-    // const likes = req.body["likes"];
-    const givenUser = req.body;
-    const likeList = givenUser.likes;
+    const givenUser = req.session["currentUser"];
     const currentUser = {
-      ...req.body,
-
-      likes: likeList.includes(parseInt(recipeId)) ? req.body["likes"] : [...req.body["likes"], recipeId]
+      ...givenUser,
+      likes: [...givenUser.likes, recipeId]
     }; // Adds this recipeId to likes
     req.session["currentUser"] = currentUser;
     const status = await dao.updateUser(currentUser.username, currentUser); // Updates the current user in mongoDB
@@ -81,15 +78,15 @@ function UserRoutes(app) {
   };
   const unLikedRecipe = async (req, res) => {
     const recipeId = req.params.recipeId;
-    const givenUser = req.body;
+    const givenUser = req.session["currentUser"];
     const likeList = givenUser.likes;
-    const newLikeList = likeList.filter((id) => id !== parseInt(recipeId, 10));
+    const newLikeList = likeList.filter((id) => id !== recipeId);
 
     console.log("Recipe id: " + recipeId);
     console.log("Original liked list array: " + likeList)
     console.log("New Liked list array removing: " + recipeId + " List: " + newLikeList)
     const currentUser = {
-      ...req.body,
+      ...givenUser,
       likes: newLikeList,
     }; // Adds this recipeId to likes
     req.session["currentUser"] = currentUser;

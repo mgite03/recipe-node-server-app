@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
       default: "User",
     },
     id: Number,
-    likes: [Number],
+    likes: [String],
     follows: [String],
     followers: [String],
   },
