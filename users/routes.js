@@ -45,11 +45,12 @@ function UserRoutes(app) {
     const new_id = await dao.getHighestId();
 
     if (user) {
+      console.log("Singup Failed")
       res.status(400).json({ message: "Username already taken" });
     } else {
       const new_user = { ...req.body, id: new_id.id + 1 };
-      console.log(new_user);
       const currentUser = await dao.createUser(new_user);
+      console.log("New User Added " + currentUser)
       req.session["currentUser"] = currentUser;
       res.json(currentUser);
     }
@@ -57,12 +58,14 @@ function UserRoutes(app) {
 
   const deleteUser = async (req, res) => {
     const status = await dao.deleteUser(req.params.username);
+    console.log("Deleteing Status: " + status)
     res.json(status);
   };
 
   const signout = async (req, res) => {
     req.session.destroy();
     // currentUser = null;
+    console.log("Signed out Status: " + status)
     res.json(200);
   };
   const addLikedRecipe = async (req, res) => {
@@ -137,6 +140,7 @@ function UserRoutes(app) {
     console.log("newfolloweruser: " + followingUser)
     const status = await dao.updateUser(currUsername, currentUser); // Updates the current user in mongoDB
     const status2 = await dao.updateUser(username, followingUser); // Updates the following user in mongoDB
+    console.log(status2)
     res.json(status);
   };
 

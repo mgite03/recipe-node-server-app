@@ -26,6 +26,7 @@ function CommentsRoutes(app) {
         }
         const comment = { ...req.body, id: new_id};
         const response = await dao.createComment(comment)
+        console.log("Added comment: " + comment)
         res.json(response);
     };
 
