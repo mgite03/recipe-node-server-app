@@ -58,14 +58,12 @@ function UserRoutes(app) {
 
   const deleteUser = async (req, res) => {
     const status = await dao.deleteUser(req.params.username);
-    console.log("Deleteing Status: " + status)
     res.json(status);
   };
 
   const signout = async (req, res) => {
     req.session.destroy();
     // currentUser = null;
-    console.log("Signed out Status: " + status)
     res.json(200);
   };
   const addLikedRecipe = async (req, res) => {
@@ -114,7 +112,6 @@ function UserRoutes(app) {
     req.session["currentUser"] = currentUser;
     const status = await dao.updateUser(currentUser.username, currentUser); // Updates the current user in mongoDB
     const status2 = await dao.updateUser(followingUser.username, followingUser); // Updates the following user in mongoDB
-    console.log(status2)
     res.json(status);
   };
   const unfollowUser = async (req, res) => {
@@ -140,7 +137,6 @@ function UserRoutes(app) {
     console.log("newfolloweruser: " + followingUser)
     const status = await dao.updateUser(currUsername, currentUser); // Updates the current user in mongoDB
     const status2 = await dao.updateUser(username, followingUser); // Updates the following user in mongoDB
-    console.log(status2)
     res.json(status);
   };
 
