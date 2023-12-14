@@ -29,7 +29,14 @@ function CommentsRoutes(app) {
         res.json(response);
     };
 
+    const getCommentsByUser = async (req, res) => {
+      const username = req.params.userId;
+      const response = await dao.getCommentsByUsername(username);
+      res.json(response);
+    }
+
     app.get('/api/comments/:recipeId', getRecipeComments);
+    app.get('/api/comments/user/:userId', getCommentsByUser);
     app.delete('/api/comments/:commentId', deleteComment);
     app.get('/api/comments', getComments);
     app.post('/api/comments', createComment);
