@@ -119,14 +119,10 @@ function UserRoutes(app) {
   };
   const unfollowUser = async (req, res) => {
     const username = req.params.username;
-    let followList = req.body["follows"];
-    let newFollowList = [];
+    const followList = req.body.follows;
     // Removes the any users that are the same as the given one to "unfollow" it
-    for (const user in followList) {
-      if (user != username) {
-        newFollowList.push(user)
-      }
-    }
+    const newFollowList = followList.filter((user) => user !== username);
+
     const currentUser = {
       ...req.body,
       follows: newFollowList,
@@ -135,8 +131,8 @@ function UserRoutes(app) {
 
     const currUsername = currentUser.username
     const followingUser = await dao.findUserByUsername(username)
-    let followerList = followingUser.followers;
-    // Removes the any users that are the same as the given one to "unfollow" it
+    const followerList = followingUser.followers;
+    // Removes the any users that are the same as the given current user to "unfollow" it
     console.log("Remove " + currUsername + " from followers:" + followerList)
     const newFollowerList = followerList.filter((user) => user !== currUsername);
     console.log("Shoud not have " + currUsername + " in this new list: "+ newFollowerList)
